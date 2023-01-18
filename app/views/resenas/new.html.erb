@@ -1,0 +1,26 @@
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+      <h2 class="subtitle has-text-centered"> Nueva Reseña</h2>
+        <%= form_with model: [@cancha, Resena.new] do |form| %>
+            <div class = "field" >
+              <%= form.label :calificacion, class: "label"%>
+              <div class="select">
+                <%= form.select :calificacion, [1, 2, 3, 4, 5, 6, 7],class:"form-select", required: true%>
+              </div>
+            </div>
+            <div class = "field" >
+              <%= form.label :contenido, class: "label"%>
+              <div class="control">
+                <%= form.text_field :contenido, class: "input",required: true %>
+              </div>
+            </div>
+          <div class = "field mb-3" >
+            <%= form.submit "Crear", class: "button is-dark" %>
+          </div>
+        <% end %>
+    </div>
+
+  <div class="field has-text-centered">
+    <%= link_to 'Volver', cancha_path(@cancha.id), class: "button is-light is-centered"%>
+  </div>

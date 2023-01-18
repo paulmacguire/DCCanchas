@@ -1,0 +1,49 @@
+<section class="section is-medium">
+  <h1 class="title has-text-centered"> AppCanchas </h1>
+  <h2 class="subtitle has-text-centered">
+    Una simple App en la cual puedes reservas canchas. 
+  </h2>
+</section>
+
+  <div class="columns is-mobile is-multiline is-centered mb-6">
+    <div class="column is-narrow">
+      <%= link_to 'Canchas', canchas_path, class: "button is-light" %>
+    </div>
+    <% if current_usuario %>
+      <% if current_usuario.tipo_usuario == 'Admin' %>
+        <div class="column is-narrow">
+            <%= link_to 'Reservas', reservas_path, class: "button is-light" %>
+        </div>
+        <div class="column is-narrow">
+            <%= link_to 'Usuarios', usuarios_path, class: "button is-light" %>
+        </div>
+      <% else %>
+        <div class="column is-narrow">
+            <%= link_to 'Reservas', reservas_path, class: "button is-light" %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="column is-narrow">
+          <button class="button is-light" title="Disabled button" disabled>Reservas</button>
+      </div>
+    <% end %>
+    <% if current_usuario %>
+      <div class="column is-narrow">
+          <%= link_to 'Mensajes', conversations_path, class: "button is-light" %>
+      </div>
+    <% else %>
+      <div class="column is-narrow">
+          <button class="button is-light" title="Disabled button" disabled>Mensajes</button>
+      </div>
+    <% end %>
+  </div>
+
+
+<section class="section is-large">
+  <div class="content has-text-centered ">
+      <p>
+        <strong>AppCanchas</strong> by <a href="https://github.com/nicolasgarciaes">Nicolás</a>, <a href="https://github.com/Astugol">Diego</a> y <a href="https://github.com/paulmacguire">Paul</a>.
+      </p>
+  </div>
+</section>
+

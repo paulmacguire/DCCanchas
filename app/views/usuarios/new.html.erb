@@ -1,0 +1,30 @@
+<h1>New User<h1>
+
+<%= form_with model: Usuario.new do |form| %>
+
+    <div>
+      <%= form.label :nombre %>
+      <%= form.text_field :nombre %>
+    </div>
+    <div>
+      <%= form.label :imagen_perfil %>
+      <%= form.text_field :imagen_perfil %>
+    </div>
+    <div>
+      <%= form.label :correo %>
+      <%= form.text_field :correo %>
+    </div>
+    <div>
+      <%= form.label :telefono %>
+      <%= form.text_field :telefono %>
+    </div>
+    <div>
+      <%= form.label :contrasena %>
+      <%= form.text_field :contrasena %>
+    </div>
+    <div>
+      <%= form.submit 'Create User' %>
+    </div>
+
+
+<% end %>

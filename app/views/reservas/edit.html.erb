@@ -1,0 +1,179 @@
+
+  <%if current_usuario.tipo_usuario == "Jugador"%>
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="box has-background-light">
+          <% @cancha = Cancha.find(@reserva.cancha_id) %>
+          <%= form_with model: @reserva do |form| %>
+              <h2 class="subtitle has-text-centered"> Modificar detalles de la cancha </h2>
+              <div class = field>
+                <%= form.label :fecha, class: "label" %>
+                <div class="control">
+                  <%= form.text_field :fecha, class: "input", type:'date', required: true %>
+                </div>
+
+              </div>
+              <div class = "field mb-5" >
+                <%= form.label :hora_inicio, class: "label" %>
+                <div class="select">
+                  <%= form.select :hora_inicio, ['8:00', '9:00', '10:00', '11:00','11:00', '12:00', '13:00', '14:00', '15:00','16:00', '17:00', '18:00', '19:00', '20:00','21:00', '22:00', '23:00'], class:"form-select", type:'time', required: true  %>
+                </div>
+              </div>
+
+              <% if @cancha.deporte == 'Fútbol'%>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pelotas de Futbol'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pelotas de Futbol', id: 'equipamiento_pelota_de_futbol'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Petos'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Petos', id: 'equipamiento_petos'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Guantes de Arquero'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Guantes de Arquero', id: 'equipamiento_guantes_de_arquero'%>
+                </div>
+
+              <% elsif @cancha.deporte == 'Padel'%>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pelotas de Padel'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pelotas de Padel', id: 'equipamiento_pelota_de_padel'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pala'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pala', id: 'equipamiento_pala'%>
+                </div>
+
+              <% elsif @cancha.deporte == 'Tenis'%>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pelotas de Tenis'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pelotas de Tenis', id: 'equipamiento_pelota_de_tenis'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Raqueta'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Raqueta', id: 'equipamiento_raqueta'%>
+                </div>
+              <% elsif @cancha.deporte == 'Básquetbol'%>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pelotas de Básquetbol'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pelotas de Básquetbol', id: 'equipamiento_pelotas_de_basquetbol'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Petos'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Petos', id: 'equipamiento_petos'%>
+                </div>
+              <% end %>
+              <div class = field, align= "center">
+                <%= form.submit 'Editar Reserva', class: "button is-dark mb-3" %>
+              </div>
+          <% end %> 
+        </div>
+      </div>
+    </div>
+  <%elsif current_usuario.tipo_usuario == "Moderador"%>
+      <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="box has-background-light">
+          <h2 class="subtitle has-text-centered"> Modificar estado de la reserva </h2>
+          <%= form_with model: [@cancha, @reserva] do |form| %>
+                <div class = "field" >
+                    <%= form.label :estado, class: "label" %>   
+                    <div class="select mb-5">
+                        <%= form.select :estado, ["Aceptado", "Rechazado"] ,class:"form-select" %>
+                    </div>
+                </div>
+            <div class = "field mb-3", align= "center">
+              <%= form.submit "Editar", class: "button is-dark" %>
+            </div>
+          <% end %>
+      </div>
+      </div>
+    </div>
+
+  <%elsif current_usuario.tipo_usuario == "Admin"%>
+
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="box has-background-light">
+          <% @cancha = Cancha.find(@reserva.cancha_id) %>
+          <%= form_with model: @reserva do |form| %>
+              <h2 class="subtitle has-text-centered"> Modificar detalles de la cancha </h2>
+              <div class = field>
+                <%= form.label :fecha, class: "label" %>
+                <div class="control">
+                  <%= form.text_field :fecha, class: "input", type:'date', required: true %>
+                </div>
+              </div>
+              <div class = field>
+                <%= form.label :hora_inicio, class: "label" %>
+                <div class="control">
+                  <%= form.text_field :hora_inicio, class: "input", type:'time', required: true  %>
+                </div>
+              </div>
+
+              <% if @cancha.deporte == 'Fútbol'%>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pelotas de Futbol'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pelotas de Futbol', id: 'equipamiento_pelota_de_futbol'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Petos'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Petos', id: 'equipamiento_petos'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Guantes de Arquero'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Guantes de Arquero', id: 'equipamiento_guantes_de_arquero'%>
+                </div>
+
+              <% elsif @cancha.deporte == 'Padel'%>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pelotas de Padel'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pelotas de Padel', id: 'equipamiento_pelota_de_padel'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pala'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pala', id: 'equipamiento_pala'%>
+                </div>
+
+              <% elsif @cancha.deporte == 'Tenis'%>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pelotas de Tenis'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pelotas de Tenis', id: 'equipamiento_pelota_de_tenis'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Raqueta'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Raqueta', id: 'equipamiento_raqueta'%>
+                </div>
+              <% elsif @cancha.deporte == 'Básquetbol'%>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Pelotas de Básquetbol'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Pelotas de Básquetbol', id: 'equipamiento_pelotas_de_basquetbol'%>
+                </div>
+                <div class = "field">
+                  <%= label 'equipamiento', 'Petos'%>
+                  <%= check_box_tag 'reserva[equipamiento][]', 'Petos', id: 'equipamiento_petos'%>
+                </div>
+              <% end %>
+
+                <div class = "field" >
+                    <%= form.label :estado, class: "label" %>   
+                    <div class="select mb-5">
+                        <%= form.select :estado, ["Aceptado", "Rechazado", "Pendiente"] ,class:"form-select" %>
+                    </div>
+                </div>
+
+              <div class = field, align= "center">
+                <%= form.submit 'Editar Reserva', class: "button is-dark mb-3" %>
+              </div>
+          <% end %> 
+        </div>
+      </div>
+    </div>
+  <%end%>
+
+      <div class="field has-text-centered mb-5">
+        <%= link_to 'Volver', reserva_path(@reserva.id), class: "button is-light" %>
+      </div>
+
+
+

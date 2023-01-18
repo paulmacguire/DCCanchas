@@ -1,0 +1,630 @@
+#### para generar el controlador de la pantalla de inicio (routing)
+#### rails g controller home index
+#### (hay que hacer cambios a las rutas)
+#### en routes.rb escribir: root :to => "home#index"
+#### -------------------------------------------------------------------
+
+#### USUARIOS ####
+#### Crear model usuario
+rails g model Usuario nombre:string :string correo:string telefono:string contrasena:string
+
+rails db:migrate
+
+#### Crear controller usuario
+rails g controller Usuarios index show new edit
+#### en routes.rb escribir: resources :usuarios
+
+-------------------------------------------------------------------
+
+#### CANCHAS ####
+#### Crear model cancha 
+rails g model Cancha direccion:string descripcion:string deporte:string 
+
+rails db:migrate
+
+
+#### Crear controller cancha
+rails g controller Canchas index show new edit
+#### en routes.rb escribir: resources :canchas
+
+-------------------------------------------------------------------
+
+#### RESERVAS ####
+#### Crear model reserva 
+rails g model Reserva fecha:string hora_inicio:string hora_fin:string
+#### en routes.rb escribir: resources :reservas
+
+rails db:migrate
+
+
+#### Crear controller reserva
+rails g controller Reservas index show new edit 
+
+
+#### RESERVAS ####
+#### Crear model reseña 
+rails g model Resena calificacion:integer contenido:text 
+#### en routes.rb escribir -> resources :resenas
+
+rails db:migrate
+
+
+#### Crear controller reserva
+rails g controller Resenas index show new edit 
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+#### ASOCIACIONES ####
+
+### ASOCIACION 1:N
+
+#### Para crear una "rewiew" que dependa de dos modelos, por ejemplo:
+# Una review que dependa del usuario ingresado y del juego que se quiere hacer la review:
+
+bundle exec rails g model resena calificacion:integer contenido:text usuario:references cancha:references
+
+bundle exec rails g model reserva hora_inicio:string fecha:date nombre_usuario:string usuario:references cancha:references
+
+# Acá los modelos son "user" y "game"
+# Se va a haber creado un "create_rewiews" en db/migrate, el cual dentro tiene las referencias de user y game
+# El atributo null:false permite que necesariamente dependan de esas referencias para poder existir
+
+bundle exec rails db:migrate   # Para efectuar la migración
+
+# Si nos fijamos, se crea un modelo rewiew automaticamente en /app/models
+
+#### Hay que modificar los modelos los cuales hacen que dependa la "rewiew"
+
+# Debajo de devise:.......... , se tiene que poner:
+
+has_many: rewiews
+
+# En este caso, se debe hacer eso para los modelos user y game, para ambos se tiene que modificar.
+
+#### Para crear el controlador de "rewiews"
+
+bundle exec rails g controller ResenasController
+bundle exec rails g controller ReservasController
+
+# Luego, en /app/controllers estára el rewiews_controller.rb
+# Dentro de esta clase se debe creare el metodo "new"
+
+def new
+
+end
+
+# Sin nada adentro.
+# Luego, en /app/views/rewiews  , se debe crear el archivo new.html.erb  . Dentro de este, se debe poner:
+
+(Copiar el codigo de app/views/users/new.html.erb  , y adaptarlo a rewiew)
+Hay que cambiar el @user por Rewiew.new
+Dejar los <div> de label y text_field, y el <div> de submit (POR EJEMPLO)
+
+
+##### Ahora hay que ver la ruta, en /config/routes
+
+# Hay que agregar una nueva resources, la cual tiene que ir debajo de la que estaba antes y arriba de root:
+
+resources: .........  #no se tienen que escribir los puntos, es para decir q hay algo ahi
+resources: rewiews
+
+# Ahora hay que correr:
+
+bundle exec rails routes
+
+#### Ahora hay que crear el metodo "create" en RewiewsController:
+
+def create
+    @rewiew = Rewiew.new(rewiew_params)
+    @rewiew.user_id = current_user.id     ### Con esto podemos acceder al id del usuario
+    if @rewiew.save
+        redirect_to_games_path
+
+    else
+        render :new
+    end
+end
+
+private
+
+def rewiew_params
+    params.require(:rewiew).permit(:content)
+end
+
+# Hay que agregar el before_action:authenticate_user! entre class RewiewsController < ApplicationController
+y def new :
+
+class RewiewsController < ApplicationController
+    before_action :authenticate_user!
+
+    def new
+
+    end
+    .
+    .
+    .
+    .
+
+
+#### Hay que cambiar el resources que está en routes.rb, para que las rewiews puedan tener un "game" asociado también:
+
+resources :games do
+    resources :rewiews, only: [:new, :create]
+end
+
+
+# Ahora para verificar que se creo correctamente:
+
+rails routes
+
+# Con esto podemos verificar que para los game_rewiews POST se creó algo del estilo:
+
+game_rewiews POST /games/:game_id/rewiews(.:format)
+new_game_rewiew GET /games/:game_id/rewiews/new(.:format)
+.
+.
+.
+
+#### Luego de haber hecho esto, se tiene que poner en el metodo "new" del controlador de "RewiewsController":
+
+def new
+    @game = Game.find(params[:game_id])
+end
+
+#### Si nos damos cuenta ahora, va a tirar error en el /rewiews/new.html.erb el cual va a indicar el error en el 
+Rewiew.new do |f| ......a
+
+Para poder corregir esto, se debe modificar el codigo con lo siguiente:
+
+(Se debe modificar solo esta linea en particular)
+
+<% form_with model: [@game, Rewiew.new] do |f| %>
+.
+.
+.
+.
+
+# Ahora si recargamos, debería funcionar.
+
+#### Está a un paso de poder crear los rewiews. Para esto nos podemos dar cuenta que podemos acceder a los "games"
+dentro del controlador "RewiewsController". Esto se hace agregando @game = Game.find(params[:game_id])    en:
+
+
+def create
+    @game = Game.find(params[:game_id])
+    .
+    .
+    .
+    @rewiew.game = @game
+.
+.
+end
+
+# Con esto las rewiews quedarían asociadas tanto a los "games" como a los "users"
+# Si nos fijamos, podemos ingresar el texto que queramos. Luego al darle al boton nos redijirá al path "redirect_to_games_path"
+
+## Ahora podemos correr la consola con:
+
+rails c
+
+# Utilizamos el comando:
+
+Rewiew.find(1)
+
+# Esto nos devolverá la rewiew que hicimos, y se podrá ver que está asociada a un user_id, game_id, etc.
+
+
+##### Ahora para editar la interfaz y que se vea todo bien, podemos ir al show.html.erb de "games" y ver los rewiews asociados a ese game
+mediante el siguiente codigo:
+
+.
+.
+.
+.
+<div align='center'>
+    <h3 Reviews</h3>
+    <% if current_user %>
+        <% link_to "Create review", new_game_rewiew_path(@game) %>
+    <% end %>
+    <% @game.rewiews.each do |rewiew| %>
+        <p><% rewiew.content %></p>
+        <p><% rewiew.user.name %></p>
+    <% end %>
+</div>
+
+Acá más abajo está el boton de "Back" con el path "game_path"
+
+#### Ahora hay que corregir el path del "game" en el controlador de rewiews "RewiewsController". Lo que
+hay que modificar es:
+
+def create
+    .
+    .
+    .
+    if @rewiew.save
+        redirect_to game_path(@game)    ## Es super necesario el @game ya que tiene que tener asociado el "game" al cual se está haciendo la rewiew
+
+####### TODO ESTO FUERON RELACIONE 1:N, LAS CUALES PARA NOSOTROS PUEDE SER EL CASO DE QUE UN USUARIOS
+HAGA UNA RESERVA
+
+
+
+######## ASOCIACION N:N
+
+### Para poder crear una tabla que una dos modelos y así pode trabajar con una tabla que sea N:N, se puede ocupar lo siguiente:
+
+rails g migration CreateJoinTableUserGame
+
+# En este caso quiero relacionar los modelos "user" y "game". Ahora si nos fijamos en /app/db/migrate  va a haber un archivo
+relacionado a create_join_table_user_game.rb . No es necesario descomentar las lineas de código que vienen.
+
+### Ahora se deben correr las migraciones:
+
+bundle exec rails db:migrate
+
+# Para poder confirmar de que se ejecutó todo correctamente, podemos hacer lo siguiente:
+
+psql app_development       #Acá en vez de app_development no me acuerdo q iba en nuestro caso
+
+# Luego para ver las tablas:
+
+\dt
+
+# Podemos ver que se creó perfectamente la tabla games_users (la tabla que relaciona a los 2 modelos). Si hacemos un select * from games_users; 
+podemos ver que se creó una tabla con las columnas user_id y game_id
+
+
+### Ahora tenemos que modificar el modelo de "game" en /app/models/game.rb . Acá se tiene que añadir lo siguiente:
+
+class Game < ApplicacionRecord
+    ..
+    .
+    .
+    has_and_belongs_to_many :users
+end
+
+# Se tiene que hacer lo mismo para el modelo "user" en /app/models/user.rb
+
+class user < ApplicacionRecord
+    ..
+    .
+    .
+    has_and_belongs_to_many :games
+end
+
+#### Ahora podemos crear también metodos custom (personalizados) en base a nuestros criterios. Por ejemplo en este caso,
+queremos poder marcar un juego como favorito y poder desmarcarlo. Para ello se tiene que hacer lo siguiente:
+
+# Hay que ir al archivo routes.rb y agregar lo siguiente:
+
+Rails.application.routes.draw do
+.
+.
+.
+.
+    end
+    root .......
+
+    post "/game/:id/favorite", to: "games#favorite"
+    delete "/game/:id/umfavorite", to:"games$unfavorite"
+
+end
+
+
+# Luego nos vamos al controlador del "game" que es GamesController y agregamos los metodos:
+
+def favorite
+    @game = Game.find(param[:id])
+end
+
+def unfavorite
+    @game = Game.find(param[:id])
+end
+
+#### Ahora tenemos que añadir esto a los resources para poder ocupar estos metodos customs. Para ello
+se tiene que hacer lo siguiente en el archivo routes.rb :
+
+Rails.application.routes.draw do
+.
+.
+.
+.
+    resources :games do
+        resources :rewiews , only: [:new, :create]
+        member do
+            post 'favorite'
+            delete 'unfavorite'
+
+        end
+    end
+.
+.
+.
+.
+end
+
+# Tenemos que borrar el post y delete que están abajo, ya que haciendo el "member do" nos aseguramos
+de que se pueda ocupar para todos
+
+# Si queremos verificar que se creó correctamente el routes de favorite, podemos hacer lo siguiente:
+
+rails routes
+
+# Si vemos, se va a haber creado favorite_game POST /games/:id ...... y unfavorite_game DELETE /games/:id ......
+
+##### Ahora debemos modificar el metodo favorite de "GamesController", mediante lo siguiente:
+
+def favorite
+    @game = Game.find(param[:id])
+    current_user.games << @game      # Lo que hace esto es agregar @game a la lista games
+    redirect_to game_path(@game)
+end
+ 
+
+##### Ahora tenemos que ir al show.html.erb de "games" y agregar el tema de los favoritos. Esto se hace mediante
+lo siguiente:
+
+.
+.
+.
+.
+<% if current_user %>
+    <% if current_user.games.ids.include? @game.id %>
+        <p> Unfavorite </p>
+    <% else %>
+        <% button_to "Add to favorites", favorite_game_path(@game), method: :post %>
+    <% end %>
+<% end %>
+
+# Al apretar el boton en la página, podemos verificar como se inserta esos datos en la tabla "game_users" en la consola
+# Podemos verificar también en la base de datos que se efectuó correctamente con lo siguiente:
+
+rails c
+
+user = user.find(1)
+
+user.games
+
+
+#### Ahora, para poder sacar de favoritos a este "game" se tiene que hacer lo siguiente:
+
+### Se tiene que ir al controlador de "game" el cual es GamesController y modificar el metodo "unfavorite" con lo siguiente:
+
+def unfavorite
+    @game = Game.find(params[:id])
+    current_user.games.delete(@game)
+    redirect_to game_path(@game)
+
+
+### Luego, se tiene que cambiar en el show.html.erb de "games" por lo siguiente:
+
+.
+.
+.
+.
+<% if current_user %>
+    <% if current_user.games.ids.include? @game.id %>
+        <% button_to "Unfavorite", unfavorite_game_path(@game), method: :delete %>           #### Acá es donde se tenía que cambiar
+    <% else %>
+        <% button_to "Add to favorites", favorite_game_path(@game), method: :post %>
+    <% end %>
+<% end %>
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+########################################## crear flatpicker #######################################
+
+
+rails webpacker:install:stimulus
+yarn add flatpickr
+
+# en app/javascript/packs/application.js Copiar lo siguiente:
+
+import "controllers"
+
+import flatpickr from "flatpickr"
+require("flatpickr/dist/flatpickr.css")
+
+document.addEventListener("turbolinks:load", () => {
+    flatpickr("[data-behavior='flatpickr']", {
+        altInput: true,
+        altForm: "F j, Y",
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        enableTime: true
+    })
+})
+
+
+#agregar en app\views\layouts\application.html.erb
+    <%= stylesheet_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+########################################## fronted #######################################
+
+#opcion 1
+
+1. correr codigo:
+
+yarn add bootstrap jquery popper.js
+
+2. en config/webpack/environment.js pegar:
+
+const webpack = require("webpack")
+
+environment.plugins.append("Provide", new webpack.ProvidePlugin({
+$: 'jquery',
+jQuery: 'jquery',
+Popper: ['popper.js', 'default']
+}))
+
+en app/javascript/packs/application.js pegar:
+
+import "bootstrap"
+import "../stylesheets/application"
+
+document.addEventListener("turbolinks:load", () => {
+    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="popover"]').popover()
+})
+
+3. crear archivo stylesheets (ya creado) en ese archivo
+
+@import "~bootstrap/scss/bootstrap";
+
+4. en app/views/layouts
+
+nada, ya esta listo xd
+
+5. agregar las weas que queramos en el layouts
+
+6. en caso de bug correr en el terminal ubuntu:
+yarn add @popperjs/core
+
+fuente: https://bobbyhadz.com/blog/react-module-not-found-cant-resolve-popper-js#:~:text=To%20solve%20the%20error%20%22Module,and%20restart%20your%20development%20server.
+https://github.com/gorails-screencasts/bootstap-with-webpack-4/blob/master/app/javascript/packs/application.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############### EDIT  ####
+
+<h1>Editar Reserva<h1>
+
+<%= form_with model: @reserva do |form| %>
+    <div>
+      <%= form.label :fecha %>
+      <%= form.text_field :fecha %>
+    </div>
+    <div>
+      <%= form.label :hora_inicio %>
+      <%= form.text_field :hora_inicio %>
+    </div>
+    <div>
+      <%= form.submit 'Editar Reserva' %>
+    </div>
+
+<% end %>
+
+<%= link_to 'Volver', reservas_path %>
+
+
+############### INDEX ###########
+
+<h1> Lista Reservas </h1>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Detalles</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @reservas.each do |reserva| %>
+      <tr>
+        <td><%= reserva.fecha %></td>
+        <td><%= link_to 'Detalles', reserva_path(reserva) %></td>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Nueva Reserva', new_reserva_path %>
+
+<%= link_to 'Volver al menú', home_path%>
+
+
+
+
+######################### NEW ####################################
+
+
+<h1>Nueva Reserva<h1>
+
+
+
+<%= form_with model: [@cancha, Reserva.new] do |form| %>
+
+    <div>
+      <%= form.label :fecha %>
+      <%= form.text_field :fecha, data: { behavior:"flatpickr" } %>
+    </div>
+    <div>
+      <%= form.label :hora_inicio %>
+      <%= form.text_field :hora_inicio, data: { behavior:"flatpickr2"}  %>
+    </div>
+
+    <div>
+      <%= form.submit 'Crear Reserva' %>
+    </div>
+
+
+<% end %>
+
+
+<%= link_to 'Back', reservas_path %>
+
+################ SHOW ###################
+
+<p>
+  <strong>Fecha:</strong>
+  <%= @reserva.fecha %>
+</p>
+
+<p>
+  <strong>Hora Inicio:</strong>
+  <%= @reserva.hora_inicio %>
+</p>
+
+<p>
+
+  <strong>Tus reservas</strong>
+  <% if current_usuario %>
+    <%= link_to "Crear reserva" , new_cha_path(@cancha)%>
+  <% end %>
+  <% @reserva.canchas.each do |cancha| %>
+    <p><strong> <%= cancha.direccion %></strong></p>
+    <p> <%= cancha.descripcion %> </p>
+    <p> <%= cancha.deporte %> </p>
+    <p> <%= cancha.id_usuario %> </p>
+  <% end %>
+</p>
+
+<% if current_usuario.tipo_usuario == "Moderador" %>
+  <td><%= link_to 'Editar', edit_reserva_path%></td>
+  <td><%= link_to 'Eliminar', @reserva, method: :delete, data: {confirm: 'Are you sure?'}%></td>
+<% end %>
+
+<%= link_to 'Volver', reservas_path %>

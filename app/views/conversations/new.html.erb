@@ -1,0 +1,27 @@
+
+<div class="columns is-centered">
+  <div class="column is-two-thirds">
+    <div class="box has-background-light">
+      <h2 class="subtitle has-text-centered"> NUEVO CHAT </h2>
+      <table class="table is-striped is-fullwidth is-hoverable">
+          <thead>
+            <tr>
+              <th>Receptor</th>
+              <th>Asunto</th>
+              <th>Cuerpo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= form_tag conversations_path, method: :post do %>
+            <tr>
+              <td><%= select_tag :usuario_id, options_from_collection_for_select(@recipients, :id, :nombre), required: true%></td>
+              <td><%= text_field_tag :subject, nil, size:30, placeholder: "Indique el número de cancha", required: true%></td>
+              <td><%= text_area_tag :body, nil, placeholder: "Escriba aquí...", rows:4, cols:70, required: true%></td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+<div align="center"><%=submit_tag%></div>
+<% end %>  

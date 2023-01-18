@@ -1,0 +1,33 @@
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+      <h2 class="subtitle has-text-centered"> <%= @conversation.subject%> </h2>
+      <table class="table is-striped is-fullwidth is-hoverable">
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @conversation.receipts_for(current_usuario).each do |receipt|%>
+            <tr>
+              <td><%= receipt.message.sender.nombre%> (<%= receipt.message.sender.tipo_usuario%>) dijo:</td>
+              <td><%= receipt.message.body%></td>
+              <% end %>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+<div align="center">
+  <%= form_tag conversation_messages_path(@conversation), method: :post do %>
+    <div>
+    <%= text_area_tag  :body %>
+    </div>
+
+    <%= submit_tag%>
+  <% end %>
+</div>

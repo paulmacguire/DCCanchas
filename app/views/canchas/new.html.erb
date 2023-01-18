@@ -1,0 +1,36 @@
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+      <%= form_with model: Cancha.new do |form| %>
+          <h2 class="subtitle has-text-centered"> Crear Cancha </h2>
+          <div class = field>
+            <%= form.label :direccion, class: "label" %>
+            <div class="control">
+              <%= form.text_field :direccion, class: "input",required: true %>
+            </div>
+          </div>
+          <div class = field>
+            <%= form.label :descripcion, class: "label" %>
+            <div class="control">
+              <%= form.text_field :descripcion, class: "input", required: true  %>
+            </div>
+          </div>
+          
+          <div class = "field mb-5" >
+            <%= form.label :deporte, class: "label" %>
+            <div class="select is-medium">
+              <%= form.select :deporte, ['Fútbol', 'Padel', 'Tenis', 'Básquetbol'], class:"form-select is-large" %>
+            </div>
+          </div>
+          
+          <div class="field mb-3">
+            <%= form.submit 'Crear', class: "button is-dark"%>
+          </div>
+
+      <% end %> 
+    </div>
+  </div>
+</div>
+  <div class="field has-text-centered">
+    <%= link_to 'Volver', canchas_path , class: "button is-light is-centered"%>
+  </div>

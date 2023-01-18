@@ -1,0 +1,32 @@
+
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+      <h2 class="subtitle has-text-centered"> CHATS </h2>
+      <table class="table is-striped is-fullwidth is-hoverable">
+          <thead>
+            <tr>
+              <th>Asunto</th>
+              <th>Enviado por</th>
+              <th>Recibido por</th>
+              <th>Revisar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @conversations.each do |conversation| %>
+            <tr>
+              <td><%= conversation.subject%></td>
+              <td><%= conversation.recipients[1].nombre%></td>
+              <td><%= conversation.recipients[0].nombre%></td>
+              <td><%= link_to "Revisar", conversation_path(conversation)%></td>
+            <% end %>  
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+<div class="field has-text-centered">
+  <%= link_to 'Volver', home_path , class: "button is-light"%>
+</div>

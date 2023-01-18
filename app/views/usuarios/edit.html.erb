@@ -1,0 +1,87 @@
+
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+        <%= form_with model: @usuario do |f| %>
+        <h1 class="title has-text-centered"> Editar Usuario</h1>
+        <div class = field>
+          <%= f.label :nombre, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.text_field :nombre, class: "input" %>
+            <span class="icon is-small is-left">
+              <i class="fa fa-user"></i>
+            </span>
+          </div>
+        </div>
+
+       <div class = field>
+          <%= f.label :imagen_perfil, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.text_field :imagen_perfil, class: "input" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-camera"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class = field>
+          <%= f.label :telefono, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.text_field :telefono, class: "input" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-phone"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <%= f.label :email, class: "label" %>
+          <div class="control has-icons-left has-icons-right">
+            <%= f.email_field :email, autocomplete: "email", class: "input" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </div>
+        </div>
+
+          <div class="field">
+            <%= f.label :new_password, class: "label" %> <i>(Leave blank if you don't want to change it)</i> 
+            <div class="control has-icons-left">
+              <%= f.password_field :password, placeholder: "6 caracteres mínimo",autocomplete: "new-password", class: "input" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+            </div>
+          </div>
+
+       <div class="field">
+          <%= f.label :new_password_confirmation, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="field  ">
+          <%= f.label :tipo_usuario, class: "label" %> 
+          <div class="select mb-5">
+          <%= f.select :tipo_usuario, ["Jugador", "Moderador"] ,class:"form-select" %>
+          </div>
+        </div>
+        
+        <div>
+          <%= f.submit "Editar", class: "button is-dark mb-3" %>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>
+
+
+
+  <div class="field has-text-centered mb-5">
+    <%= link_to 'Volver', usuario_path , class: "button is-light"%>
+  </div>

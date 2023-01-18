@@ -1,0 +1,32 @@
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+      <table class="table is-striped is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @usuarios.each do |usuario| %>
+            <tr>
+              <td><%= usuario.nombre %></td>
+              <td><%= usuario.email %></td>
+              <td><%= usuario.tipo_usuario %></td>
+              <td><%= link_to 'Detalles', usuario_path(usuario), class: "button is-dark" %> </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+  <div class="field has-text-centered">
+    <%= link_to 'Volver', home_path , class: "button is-light"%>
+  </div>
+
+  

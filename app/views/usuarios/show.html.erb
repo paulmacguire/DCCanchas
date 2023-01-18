@@ -1,0 +1,40 @@
+<div class="columns is-centered">
+  <div class="column is-two-thirds">
+    <div class="box has-background-light">
+      <table class="table is-striped is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Foto</th>
+            <th>Numero</th>
+            <th>Correo</th>
+            <th>Tipo</th>
+            <% if current_usuario.nombre == 'Admin' %>
+              <th>Eliminar</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= @usuario.nombre  %></td>
+            <td><img src="<%= @usuario.imagen_perfil%>" width="200" height="200"></td>
+            <td><%= @usuario.telefono %></td>
+            <td><%= @usuario.email %></td>
+            <td><%= @usuario.tipo_usuario %></td>
+              <% if @usuario.tipo_usuario == 'Admin' %>
+                <td><button class="button is-light" title="Disabled button is-dark" disabled>Eliminar</button> </td>
+              <% else%>
+                <td><%= button_to 'Eliminar', @usuario, class:"button is-dark", method: :delete, data: {confirm: 'Are you sure?'}%></td>      
+              <% end%>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+  <div class="field has-text-centered">
+    <%= link_to 'Volver', usuarios_path, class: "button is-light"%> 
+  </div>
+

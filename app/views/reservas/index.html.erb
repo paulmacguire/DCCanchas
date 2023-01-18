@@ -1,0 +1,38 @@
+
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+      <table class="table is-striped is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @reservas.each do |reserva| %>
+            <% if current_usuario.nombre == reserva.nombre_usuario %>
+            <tr>
+                <td><%= reserva.fecha %></td>
+                <td><%= link_to 'Detalles', reserva_path(reserva), class: "button is-dark" %></td>
+            </tr>
+            <% elsif current_usuario.id == (Cancha.find(reserva.cancha_id)).id_usuario %>
+            <tr>
+                <td><%= reserva.fecha %></td>
+                <td><%= link_to 'Detalles', reserva_path(reserva), class: "button is-dark" %></td>
+            </tr>
+            <% elsif current_usuario.tipo_usuario == 'Admin' %>
+            <tr>
+                <td><%= reserva.fecha %></td>
+                <td><%= link_to 'Detalles', reserva_path(reserva), class: "button is-dark" %></td>
+            </tr>
+            <%end%>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+  <div class="field has-text-centered">
+    <%= link_to 'Volver', home_path , class: "button is-light"%>
+  </div>

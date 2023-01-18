@@ -1,0 +1,89 @@
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= render "usuarios/shared/error_messages", resource: resource %>
+        <h1 class="title has-text-centered"> Registre su cuenta </h1>
+        
+        
+        <div class = field>
+          <%= f.label :nombre, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.text_field :nombre, class: "input", :placeholder => "Ingrese su nombre"  %>
+            <span class="icon is-small is-left">
+              <i class="fa fa-user"></i>
+            </span>
+          
+          </div>
+        </div>
+
+        <div class = field>
+          <%= f.label :imagen_perfil, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.text_field :imagen_perfil, class: "input", :placeholder => "Ingrese un URL de una foto" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-camera"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class = field>
+          <%= f.label :telefono, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.text_field :telefono, class: "input", :placeholder => "Ingrese su teléfono: ej, XX99 XX88" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-phone"></i>
+            </span>
+          
+          </div>
+        </div>
+
+        <div class="field">
+          <%= f.label :email, class: "label" %>
+          <div class="control has-icons-left has-icons-right">
+            <%= f.email_field :email, autocomplete: "email", class: "input",type:"email" ,:placeholder => "Ingrese su mail" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-envelope"></i>
+            </span>         
+          </div>
+        </div>
+
+        <div class="field">
+          <%= f.label :password, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.password_field :password, placeholder: "Ingrese una contraseña de 6 caracteres mínimo", autocomplete: "new-password", class: "input" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          </div>
+        </div>
+
+
+        <div class="field">
+          <%= f.label :password_confirmation, class: "label" %>
+          <div class="control has-icons-left">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input", :placeholder => "Reconfirme su contraseña" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          
+          </div>
+        </div>
+ 
+
+        <div class="field  ">
+          <%= f.label :tipo_usuario, class: "label" %> 
+          <div class="select mb-5">
+          <%= f.select :tipo_usuario, ["Jugador", "Moderador"] ,class:"form-select" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.submit "Sign up", class: "button is-dark" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,29 @@
+<h1> Lista Reseñas </h1>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Calificacion</th>
+      <th>Detalles</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @resenas.each do |resena| %>
+      <tr>
+        <td><%= resena.calificacion %></td>
+        <td><%= link_to 'Detalles', resena_path(resena) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<% if current_usuario %>
+  <%= link_to 'Nueva reseña', new_resena_path %>
+<% end %>
+
+<%= link_to 'Volver al menú', home_path%>
+

@@ -1,0 +1,20 @@
+<p>
+  <strong>Calificacion:</strong>
+  <%= @resena.calificacion %>
+</p>
+<p>
+  <strong>Contenido:</strong>
+  <%= @resena.contenido %>
+</p>
+
+
+<%= link_to 'Volver', resenas_path %>
+
+<% if current_usuario %>
+  <% if current_usuario.nombre == resena.nombre_usuario%>
+    <tr>
+      <td><%= link_to 'Editar', edit_resena_path%></td>
+      <td><%= link_to 'Eliminar', @resena, method: :delete, data: {confirm: 'Are you sure?'}%></td>
+    </tr>
+  <% end %>
+<% end %>

@@ -1,0 +1,126 @@
+<div class="columns is-centered">
+  <div class="column is-three-fifths">
+    <div class="box has-background-light">
+      <h2 class="subtitle has-text-centered"> Descripción general de la cancha </h2>
+      <table class="table is-striped is-fullwidth is-hoverable">
+          <thead>
+            <tr>
+              <th>Dirección</th>
+              <th>Descripción</th>
+              <th>Deporte</th>
+              <%if current_usuario %>
+                <% if current_usuario.id == @cancha.id_usuario %>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+                <% elsif current_usuario.tipo_usuario == 'Admin' %>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+                <% end %>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><%= @cancha.direccion%></td>
+              <td><%= @cancha.descripcion%></td>
+              <td><%= @cancha.deporte%></td>
+              <%if current_usuario %>
+                <% if current_usuario.id == @cancha.id_usuario %>
+                    <td> <%= link_to "Editar", edit_cancha_path(@cancha), class: "button is-dark" %> </td>
+                    <td><%= button_to 'Eliminar', @cancha, class:"button is-dark", method: :delete, data: {confirm: 'Are you sure?'}%></td>      
+                <% elsif current_usuario.tipo_usuario == 'Admin' %>
+                    <td> <%= link_to "Editar", edit_cancha_path(@cancha), class: "button is-dark" %> </td>
+                    <td><%= button_to 'Eliminar', @cancha, class:"button is-dark", method: :delete, data: {confirm: 'Are you sure?'}%></td>      
+                <% end %>
+              <% end %>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+<div class="columns is-centered">
+  <div class="column is-three-fifths">
+    <div class="box has-background-light">
+      <h2 class="subtitle has-text-centered"> Calificaciones de los usuarios </h2>
+      <table class="table is-striped is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Nombre del usuario</th>
+            <th>Calificacion</th>
+            <th>Comentario</th>
+            <th></th>
+            <th></th>
+            <% if current_usuario %>
+                <% if current_usuario.tipo_usuario == 'Admin' %>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+                <% elsif current_usuario.id == @cancha.id_usuario %>
+                  <th>Editar</th>
+                <%end %>
+            <%end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cancha.resenas.each do |resena| %>
+            <tr>
+              <td> <%= resena.nombre_usuario %></strong></td>
+              <td> <%= resena.calificacion %> </td>
+              <td> <%= resena.contenido %> </td>
+              <% if current_usuario %>
+                <% if current_usuario.tipo_usuario == 'Admin'%>
+                  <td> <%= link_to "Editar", edit_resena_path(resena), class: "button is-dark" %> </td>
+                  <td><%= button_to 'Eliminar', resena, class:"button is-dark", method: :delete, data: {confirm: 'Are you sure?'}%></td>
+                <%elsif current_usuario.nombre == resena.nombre_usuario%> 
+                  <td> <%= link_to "Editar", edit_resena_path(resena), class: "button is-dark" %> </td>
+                  <td><%= button_to 'Eliminar', resena, class:"button is-dark", method: :delete, data: {confirm: 'Are you sure?'}%></td>
+                <%end%>
+              <%end %>
+            <%end%>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<% if current_usuario %>
+  <% if current_usuario.tipo_usuario == "Jugador" %>
+    <div class="columns is-mobile is-multiline is-centered mb-6">
+        <div class="column is-narrow">
+            <%= link_to 'Crear Reseña', new_cancha_resena_path(@cancha), class: "button is-light" %>
+        </div>
+        <div class="column is-narrow">
+            <%= link_to "Crear Solicitud de Reserva", new_cancha_reserva_path(@cancha), class: "button is-light" %>
+        </div>
+        <div class="column is-narrow">
+            <%= link_to "Volver", canchas_path, class: "button is-light" %>
+        </div>
+    </div>
+
+  <% elsif current_usuario.tipo_usuario == "Admin" %>
+    <div class="columns is-mobile is-multiline is-centered mb-6">
+        <div class="column is-narrow">
+            <%= link_to 'Crear Reseña', new_cancha_resena_path(@cancha), class: "button is-light" %>
+        </div>
+        <div class="column is-narrow">
+            <%= link_to "Crear Solicitud de Reserva", new_cancha_reserva_path(@cancha), class: "button is-light" %>
+        </div>
+        <div class="column is-narrow">
+            <%= link_to "Volver", canchas_path, class: "button is-light" %>
+        </div>
+    </div>
+  <% else %>
+    <div class="field has-text-centered">
+      <%= link_to 'Volver', canchas_path , class: "button is-light"%>
+    </div>
+  <% end %>
+<% else %>
+    <div class="field has-text-centered">
+      <%= link_to 'Volver', canchas_path , class: "button is-light"%>
+    </div>
+
+<% end %>
+
+

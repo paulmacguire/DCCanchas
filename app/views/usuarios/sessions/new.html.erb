@@ -1,0 +1,50 @@
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box has-background-light">
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+
+        <div class="field">
+          <%= f.label :email, class: "label" %>
+          <div class="control has-icons-left">
+            <div class="control">
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"input" %>
+              <span class="icon is-small is-left">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <%= f.label :password, class:"label" %>
+          <div class="control has-icons-left">
+            <div class="control">
+              <%= f.password_field :password, autocomplete: "current-password", class: "input" %>
+              <%# <%= link_to "Forgot your password?", new_password_path(resource_name), class: "button is-text is-small" %> 
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <% if devise_mapping.rememberable? %>
+          <label class="checkbox mb-3">
+            <input type="checkbox">
+            Remember me
+          </label>
+        <% end %>
+
+        <div >
+          <%= f.submit "Log in", class: "button is-dark" %>
+          
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>
+
+      

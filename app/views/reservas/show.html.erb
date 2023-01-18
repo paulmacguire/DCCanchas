@@ -1,0 +1,63 @@
+
+<% @cancha = Cancha.find(@reserva.cancha_id) %>
+  <div class="columns is-centered">
+    <div class="column is-four-fifths">
+      <div class="box has-background-light">
+        <h2 class="subtitle has-text-centered"> Descripción general de tu reserva </h2>
+        <table class="table is-striped is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Hora inicio</th>
+                <th>Id de tu cancha</th>
+                <th>Jugador</th>
+                <th>Deporte</th>
+                <th>Dirección</th>
+                <th>Equipamiento</th>
+                <th>Estado</th>
+                <% if current_usuario.nombre == @reserva.nombre_usuario %>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+                <% elsif current_usuario.id == (Cancha.find(@reserva.cancha_id)).id_usuario %>
+                  <th>Estado</th>
+                  <th>Modificar</th>
+                <% elsif current_usuario.tipo_usuario == 'Admin' %>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+                <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <td><%= @reserva.fecha %></td>
+              <td><%= @reserva.hora_inicio %> </td>
+              <td><%= @reserva.cancha_id %>  </td>
+              <td><%= @reserva.nombre_usuario %>  </td>
+              <td><%= @cancha.deporte%></td>
+              <td><%= @cancha.direccion%></td>
+              <td><%= @reserva.equipamiento.to_sentence%></td>
+              <% if current_usuario.nombre == @reserva.nombre_usuario %>
+                <td><%= @reserva.estado %></td>
+                <td><%= link_to "Editar", edit_reserva_path(@reserva), class: "button is-dark" %></td>
+                <td><%= button_to "Eliminar", reserva_path , class: "button is-dark is-right", data: { confirm: "Are you sure?" }, method: :delete %></td>
+                <% if @reserva.estado == "Aceptado" %>  
+                  <td> <%= link_to 'Chat', new_conversation_path(:recipient_id => @cancha.id_usuario), class: "button is-dark" %></td>
+                <% end %>
+              <% elsif current_usuario.id == (Cancha.find(@reserva.cancha_id)).id_usuario %>
+                <td><%= @reserva.estado %></td>
+                <td><%= link_to "Modificar", edit_reserva_path(@reserva), class: "button is-dark" %></td>
+              <% elsif current_usuario.tipo_usuario == 'Admin' %>
+                <td><%= @reserva.estado %></td>
+                <td><%= link_to "Editar", edit_reserva_path(@reserva), class: "button is-dark" %></td>
+                <td><%= button_to "Eliminar", reserva_path , class: "button is-dark is-right", data: { confirm: "Are you sure?" }, method: :delete %></td>
+              <% end %>
+              
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="field has-text-centered">
+    <%= link_to 'Volver', reservas_path , class: "button is-light"%>
+    
+  </div>
